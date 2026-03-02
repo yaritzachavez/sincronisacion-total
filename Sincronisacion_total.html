@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<!-- ===================================================== -->
+<!-- =============== SISTEMA DE AMOR v4.0 ================ -->
+<!-- ============ Desarrollado por Yaritza =============== -->
+<!-- ===================================================== -->
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Amor - Fusión Definitiva</title>
+
+<style>
+
+/* ================= CONFIGURACIÓN GLOBAL ================= */
+
+:root{
+    --verde:#00ff88;
+    --negro:#000000;
+    --rojo:#8B0000;
+    --blanco:#ffffff;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--negro);
+    color:var(--verde);
+    font-family:monospace;
+    overflow:hidden;
+    transition:1.5s ease;
+}
+
+/* ================= MATRIX ================= */
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+/* ================= TERMINAL ================= */
+
+#terminal{
+    padding:60px;
+    font-size:18px;
+    white-space:pre-wrap;
+}
+
+/* ================= BARRA ================= */
+
+.barra-contenedor{
+    width:70%;
+    margin-left:60px;
+    margin-top:20px;
+    display:none;
+}
+
+.barra{
+    width:100%;
+    height:25px;
+    border:1px solid var(--verde);
+}
+
+.progreso{
+    width:0%;
+    height:100%;
+    background:var(--verde);
+}
+
+/* ================= BOTONES ================= */
+
+button{
+    padding:15px 30px;
+    font-family:monospace;
+    cursor:pointer;
+    border:1px solid var(--verde);
+    background:black;
+    color:var(--verde);
+    margin:20px;
+    display:none;
+    position:relative;
+}
+
+button:hover{
+    background:var(--verde);
+    color:black;
+}
+
+/* ================= PANTALLA FINAL ================= */
+
+#pantallaFinal{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    display:none;
+    align-items:center;
+    gap:80px;
+}
+
+/* ================= CORAZÓN ================= */
+
+.corazon{
+    position:relative;
+    width:250px;
+    height:250px;
+    background:red;
+    transform:rotate(-45deg);
+    animation:latir 1s infinite;
+}
+
+.corazon:before,
+.corazon:after{
+    content:"";
+    position:absolute;
+    width:250px;
+    height:250px;
+    background:red;
+    border-radius:50%;
+}
+
+.corazon:before{
+    top:-125px;
+    left:0;
+}
+
+.corazon:after{
+    left:125px;
+    top:0;
+}
+
+@keyframes latir{
+    0%,100%{transform:rotate(-45deg) scale(1);}
+    50%{transform:rotate(-45deg) scale(1.1);}
+}
+
+/* ================= PANEL ================= */
+
+.panel{
+    background:rgba(0,0,0,0.4);
+    padding:40px;
+    border-radius:15px;
+    color:white;
+    text-align:center;
+    max-width:300px;
+}
+
+.panel h1{
+    font-size:28px;
+}
+
+.panel .binario{
+    margin-top:15px;
+    font-size:14px;
+}
+
+.panel .musica{
+    margin-top:20px;
+    font-size:20px;
+}
+
+/* ================= BOTÓN NEGATIVO DINÁMICO ================= */
+
+#btnNo{
+    position:absolute;
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="terminal"></div>
+
+<div class="barra-contenedor" id="barraContenedor">
+    <div class="barra">
+        <div class="progreso" id="progreso"></div>
+    </div>
+</div>
+
+<button id="btnSi">ACEPTAR FUSIÓN DEFINITIVA</button>
+<button id="btnNo">RECHAZAR FUSIÓN</button>
+
+<div id="pantallaFinal">
+
+    <div class="corazon"></div>
+
+    <div class="panel">
+        <h1>Te ama Yari ❤️</h1>
+
+        <div class="binario">
+            <br>
+            01010100 01100101 00100000 01100001 01101101 01101111
+        </div>
+
+        <div class="musica">
+            🎵 Contigo hasta el final
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+/* ================= CONFIG ================= */
+
+const lineas = [
+
+"> Iniciando Sistema Central de Amor...",
+"> Verificando identidad de usuarios...",
+"> Usuario 1: Yaritza Chavez ✔",
+"> Usuario 2: Gerardo Cardenas✔",
+"> Ejecutando algoritmo de compatibilidad emocional...",
+"> Usuarios corriendo en el mismo servidor.",
+"> Analizando recuerdos compartidos...",
+"> Evaluando nivel de confianza...",
+"> Resultado final: 100% de compatibilidad.",
+"> Eliminando variable: distancia",
+"> Compilando archivo: NOSOTROS.exe",
+"> Sincronizando pensamientos y latidos...",
+"> Estableciendo conexión permanente...",
+"> Estado del sistema: ESTABLE",
+"> Error 404: Vida sin ti no encontrada.",
+"> Preparando fusión definitiva...",
+"> Sistema listo.",
+"> Elige una opción para continuar..."
+];
+
+
+let indiceLinea = 0;
+let indiceChar = 0;
+
+const terminal = document.getElementById("terminal");
+const barraContenedor = document.getElementById("barraContenedor");
+const progreso = document.getElementById("progreso");
+const btnSi = document.getElementById("btnSi");
+const btnNo = document.getElementById("btnNo");
+const pantallaFinal = document.getElementById("pantallaFinal");
+
+/* ================= EFECTO ESCRITURA ================= */
+
+function escribir(){
+
+    if(indiceLinea < lineas.length){
+
+        if(indiceChar < lineas[indiceLinea].length){
+
+            terminal.innerHTML += lineas[indiceLinea][indiceChar];
+            indiceChar++;
+            setTimeout(escribir,20);
+
+        }else{
+
+            terminal.innerHTML += "\n";
+            indiceChar = 0;
+            indiceLinea++;
+            setTimeout(escribir,300);
+        }
+
+    }else{
+        iniciarCarga();
+    }
+}
+
+/* ================= CARGA ================= */
+
+function iniciarCarga(){
+
+    barraContenedor.style.display="block";
+
+    let ancho=0;
+
+    const intervalo=setInterval(()=>{
+
+        if(ancho>=100){
+            clearInterval(intervalo);
+            finalizarSistema();
+        }else{
+            ancho++;
+            progreso.style.width=ancho+"%";
+        }
+
+    },15);
+}
+
+/* ================= FINAL ================= */
+
+function finalizarSistema(){
+
+    terminal.innerHTML+="\n> Sincronización completa ✔";
+    terminal.innerHTML+="\n> Nuestra vida corre en el mismo servidor.";
+    terminal.innerHTML+="\n> Error 404: Vida sin ti no encontrada.";
+    terminal.innerHTML+="\n> Elige una opción...\n";
+
+    btnSi.style.display="inline-block";
+    btnNo.style.display="inline-block";
+}
+
+/* ================= BOTÓN QUE HUYE ================= */
+
+let intentos=0;
+
+btnNo.addEventListener("mouseover",()=>{
+
+    intentos++;
+
+    btnNo.style.top=Math.random()*window.innerHeight+"px";
+    btnNo.style.left=Math.random()*window.innerWidth+"px";
+
+    if(intentos>5){
+        btnNo.innerText="No seas payaso 😂";
+    }
+
+    if(intentos>10){
+        btnNo.innerText="Sabemos que vas a aceptar 😌";
+    }
+
+    if(intentos>15){
+        btnNo.style.display="none";
+    }
+
+});
+
+/* ================= BOTÓN POSITIVO ================= */
+
+btnSi.addEventListener("click",()=>{
+
+    document.body.style.background="var(--rojo)";
+    terminal.style.display="none";
+    barraContenedor.style.display="none";
+    btnSi.style.display="none";
+    btnNo.style.display="none";
+    document.getElementById("matrix").style.display="none";
+
+    pantallaFinal.style.display="flex";
+});
+
+/* ================= MATRIX ================= */
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+canvas.height=window.innerHeight;
+canvas.width=window.innerWidth;
+
+const letras="01❤️";
+const tamaño=16;
+const columnas=canvas.width/tamaño;
+const gotas=[];
+
+for(let x=0;x<columnas;x++) gotas[x]=1;
+
+function dibujar(){
+
+    ctx.fillStyle="rgba(0,0,0,0.07)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle="#00ff88";
+    ctx.font=tamaño+"px monospace";
+
+    for(let i=0;i<gotas.length;i++){
+
+        const texto=letras[Math.floor(Math.random()*letras.length)];
+        ctx.fillText(texto,i*tamaño,gotas[i]*tamaño);
+
+        if(gotas[i]*tamaño>canvas.height && Math.random()>0.975){
+            gotas[i]=0;
+        }
+
+        gotas[i]++;
+    }
+}
+
+setInterval(dibujar,30);
+
+/* ================= INICIAR ================= */
+
+escribir();
+
+</script>
+
+</body>
+</html>
