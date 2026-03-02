@@ -372,7 +372,10 @@ function dibujar(){
 setInterval(dibujar,30);
 
 /* ================= INICIAR ================= */
-
+window.onerror = (m, s, l, c) => {
+  const t = document.getElementById("terminal");
+  if (t) t.textContent = "ERROR: " + m + "\nLínea: " + l + " Col: " + c;
+};
 escribir();
 
 </script>
